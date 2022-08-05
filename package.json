@@ -1,5 +1,6 @@
 {
   "name": "@any86/log",
+  "type":"module",
   "version": "0.0.1",
   "description": "根据git记录生成日志",
   "main": "index.js",

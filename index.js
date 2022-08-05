@@ -1,12 +1,11 @@
-import JSON5 from 'json5';
 import { exec, execSync } from 'child_process'
 import fs from 'fs';
 const keys = ['refactor', 'fix', 'perf', 'feat']
 const TITLE_MAP = {
-    refactor:'Refactors',
-    feat:'Features',
-    fix: 'Bug Fixes',
-    perf: 'Performance Improvements'
+    refactor:'🚀Refactors',
+    feat:'⭐Features',
+    fix: '📐Bug Fixes',
+    perf: '🎉Performance Improvements'
 }
 
 function getLog() {
