@@ -2,8 +2,8 @@ import { exec, execSync } from 'child_process'
 import fs from 'fs';
 const keys = ['refactor', 'fix', 'perf', 'feat']
 const TITLE_MAP = {
-    refactor:'🚀Refactors',
-    feat:'⭐Features',
+    refactor: '🚀Refactors',
+    feat: '⭐Features',
     fix: '📐Bug Fixes',
     perf: '🎉Performance Improvements'
 }
@@ -67,7 +67,7 @@ function _groupLogByDate(log) {
 function genMD(group, dateSet, title = '更新日志') {
     const mdArray = [`# ${title}`];
     for (const date of dateSet) {
-        if(0 === Object.keys(group[date]).length) continue;
+        if (0 === Object.keys(group[date]).length) continue;
         // 日期
         mdArray.push(`## ${date}\n`);
 
@@ -75,7 +75,7 @@ function genMD(group, dateSet, title = '更新日志') {
             if (void 0 === group[date][key]) continue;
             // 类型
             mdArray.push(`### ${TITLE_MAP[key]}\n`);
-            
+
             // 内容
             for (const commit of group[date][key]) {
                 mdArray.push(`${commit.message}\n`);
