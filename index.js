@@ -11,8 +11,11 @@ const TITLE_MAP = {
 function getLog() {
     const END_TAG = '--END--'
     const SEPARATOR_TAG = '--SEPARATOR--'
-    const cmd = `git log --after="2022-1-3"  --no-merges --date=format:"%Y-%m-%d %H:%M:%S"  --pretty=format:"%B${SEPARATOR_TAG}%cd${SEPARATOR_TAG}%h${SEPARATOR_TAG}%H${END_TAG}"`
+    const cmd = `git log --after="2022-1-3"  --no-merges --date=format:"%Y-%m-%d"  --pretty=format:"%B${SEPARATOR_TAG}%cd${SEPARATOR_TAG}%d${SEPARATOR_TAG}%H${END_TAG}"`
+
+
     const logString = execSync(cmd).toString().trim();
+
     const log = logString.split(END_TAG);
     // 删除最后一行空数据
     log.pop();
@@ -22,10 +25,9 @@ function getLog() {
 
         // 删除描述中开头结尾的\n
         oneLogArray[0] = oneLogArray[0].replace(/^\n/, '').replace(/\s*$/, '');
-        const [message, time, shortHash, hash] = oneLogArray;
-        const date = time.replace(/\s\d{2}:\d{2}:\d{2}/, '')
-        const oneLog = { message, date, time, shortHash, hash };
-
+        const [message, date, ref, hash] = oneLogArray;
+        const matched = ref.match(/tag:\s*v(\d\.\d\.\d)/);
+        const oneLog = { message, date, version: null === matched ? void 0 : matched[1], hash };
         for (const key of keys) {
             if (message.includes(key)) {
                 // 标记类型(fix/feat...)
@@ -39,29 +41,32 @@ function getLog() {
     return list
 }
 
-function _groupLogByDate(log) {
-    const dateSet = new Set();
+function _groupLog(log) {
+    const list = new Set();
     // 分组
     const group = {};
 
+    let _version;
     // 遍历数据到组
     for (const row of log) {
-        const { date, message, type } = row;
-        dateSet.add(date);
-        if (void 0 === group[date]) {
-            group[date] = {};
+        const { date, type, version } = row;
+        _version = version || _version;
+        if (_version && void 0 === group[_version]) {
+            group[_version] = { date };
         }
 
         // 填充数据
         for (const key of keys) {
             if (type === key) {
-                group[date][key] = group[date][key] || [];
-                group[date][key].push(row);
+                group[_version][key] = group[_version][key] || [];
+                group[_version][key].push(row);
                 break;
             }
         }
+        list.add(group[_version]);
+
     }
-    return [group, dateSet];
+    return list
 }
 
 function genMD(group, dateSet, title = '更新日志') {
@@ -88,8 +93,10 @@ function genMD(group, dateSet, title = '更新日志') {
 
 
 const g = getLog()
-const [group, dateSet] = _groupLogByDate(g);
-genMD(group, dateSet)
+const list = _groupLog(g);
+console.log(list);
+// genMD(group, dateSet)
+
 
 
 
