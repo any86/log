@@ -1,0 +1,20 @@
+{
+  "name": "@any86/log",
+  "version": "0.0.1",
+  "description": "根据git记录生成日志",
+  "main": "index.js",
+  "scripts": {
+    "build": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/any86/log.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/any86/log/issues"
+  },
+  "homepage": "https://github.com/any86/log#readme"
+}
